@@ -24,7 +24,12 @@ export default function Home() {
             centered
           />
           <div className="mt-12">
-            <StatGrid />
+            <StatGrid stats={[
+              { label: 'Active Users', value: '10K+' },
+              { label: 'Conversations', value: '50K+' },
+              { label: 'Characters', value: '25+' },
+              { label: 'Satisfaction', value: '98%' },
+            ]} />
           </div>
         </div>
       </section>

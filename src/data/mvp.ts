@@ -1,0 +1,15 @@
+export const mvpSteps = [
+  { step: 1, title: 'Landing Page', description: 'Welcome users to the platform' },
+  { step: 2, title: 'Create Account / Login', description: 'User authentication' },
+  { step: 3, title: 'Verify Email', description: 'Email verification' },
+  { step: 4, title: 'Complete Profile', description: 'User onboarding' },
+  { step: 5, title: 'Browse Character Library', description: 'Discover AI characters' },
+  { step: 6, title: 'Select Character', description: 'Choose a conversation partner' },
+  { step: 7, title: 'Initialize Conversation', description: 'Start the session' },
+  { step: 8, title: 'AI Conversation Session', description: 'Real-time interaction' },
+  { step: 9, title: 'Conversation Ends', description: 'Session completion' },
+  { step: 10, title: 'Generate Session Summary', description: 'AI-generated recap' },
+  { step: 11, title: 'Store Session', description: 'Save conversation history' },
+  { step: 12, title: 'Return to Dashboard', description: 'User home' },
+  { step: 13, title: 'Upgrade to Premium', description: 'Premium conversion' },
+];
