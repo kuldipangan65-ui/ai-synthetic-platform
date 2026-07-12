@@ -1,0 +1,7 @@
+import type { Config } from 'eslintrc.d'
+
+const config: Config = {
+  extends: 'next/core-web-vitals',
+}
+
+export default config
