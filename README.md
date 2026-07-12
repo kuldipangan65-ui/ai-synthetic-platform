@@ -81,6 +81,7 @@ ai-synthetic-platform/
 │   └── lib/
 │       └── utils.ts
 ├── public/
+├── .env.example
 ├── .gitignore
 ├── next.config.ts
 ├── package.json
@@ -111,15 +112,67 @@ cd ai-synthetic-platform
 npm install
 ```
 
-3. Run the development server:
+3. **Set up environment variables** (required for production features):
+
+   Copy the example environment file:
+   ```bash
+   cp .env.example .env.local
+   ```
+
+   Then fill in your actual values in `.env.local`:
+   ```env
+   # Database
+   DATABASE_URL=your_database_url
+   
+   # Authentication
+   NEXTAUTH_SECRET=your_secret_key
+   NEXTAUTH_URL=http://localhost:3000
+   
+   # Stripe (Billing)
+   NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_...
+   STRIPE_SECRET_KEY=sk_...
+   
+   # AI Provider
+   OPENAI_API_KEY=sk-...
+   ANTHROPIC_API_KEY=...
+   
+   # Voice API
+   ELEVENLABS_API_KEY=...
+   
+   # Analytics
+   POSTHOG_API_KEY=...
+   ```
+
+   **Important**: Never commit `.env.local` or `.env` to version control. These files are already in `.gitignore`.
+
+4. Run the development server:
 ```bash
 npm run dev
 ```
 
-4. Open your browser and navigate to:
+5. Open your browser and navigate to:
 ```
 http://localhost:3000
 ```
+
+### Environment Variables Guide
+
+For a detailed explanation of each environment variable, see [`.env.example`](./.env.example).
+
+**Key Points:**
+- `.env.example` — Safe template with no secrets (committed to repo)
+- `.env.local` — Your actual secrets (ignored by git)
+- `.env.production` — Deployment environment (set in your hosting platform)
+
+**For Local Development:**
+- Copy `.env.example` to `.env.local`
+- Fill in your API keys and secrets
+- Never commit `.env.local` to git
+
+**For Deployment (Vercel, etc.):**
+- Set environment variables in your platform's dashboard
+- Do not commit them to the repository
+- Use the variable names from `.env.example`
 
 ## 📄 Available Pages
 
@@ -186,38 +239,15 @@ npm run start
 3. Click "Import Project"
 4. Select your GitHub repository
 5. Framework is detected as Next.js
-6. Click "Deploy"
+6. Add your environment variables in the Vercel dashboard:
+   - Database credentials
+   - API keys (OpenAI, Anthropic, Stripe, etc.)
+   - Authentication secrets
+7. Click "Deploy"
 
 Vercel will automatically generate a live preview URL.
 
-## 📋 Environment Variables
-
-For the current demo build, no environment variables are required.
-
-For production expansion, you'll want to add:
-
-```env
-# Database
-DATABASE_URL=your_database_url
-
-# Authentication
-NEXTAUTH_SECRET=your_secret_key
-NEXTAUTH_URL=http://localhost:3000
-
-# Stripe (Billing)
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_...
-STRIPE_SECRET_KEY=sk_...
-
-# AI Provider
-OPENAI_API_KEY=sk-...
-ANTHROPIC_API_KEY=...
-
-# Voice API
-ELEVENLABS_API_KEY=...
-
-# Analytics
-POSTHOG_API_KEY=...
-```
+**Important:** Configure all environment variables in your Vercel project settings before deploying. The pipeline will validate that required variables are set.
 
 ## 🎯 Design Intent
 
@@ -272,6 +302,8 @@ The layout is simple enough to move quickly, but modular enough to scale into a 
 - [ ] Check that shared components are imported correctly
 - [ ] Review copy, labels, and headings for consistency
 - [ ] Ensure placeholder data is clearly identified as demo data
+- [ ] Verify `.env.local` is in `.gitignore`
+- [ ] Confirm `.env.example` has been created and committed
 
 ### Before Deploying to Vercel
 
@@ -281,6 +313,7 @@ The layout is simple enough to move quickly, but modular enough to scale into a 
 - [ ] Confirm homepage loads correctly
 - [ ] Confirm navigation links work
 - [ ] Confirm `/admin` page is separated from user flow
+- [ ] Verify all required environment variables are configured in Vercel dashboard
 
 ### After Deployment
 
@@ -289,6 +322,26 @@ The layout is simple enough to move quickly, but modular enough to scale into a 
 - [ ] Review page load speed
 - [ ] Capture screenshots for investor review
 - [ ] Share preview link with testers
+- [ ] Monitor build and deployment logs for errors
+
+## 🔒 Security Notes
+
+### Environment Variables Best Practices
+
+1. **Never commit secrets** — Use `.env.local` for local development
+2. **Use `.env.example`** — Share as template with placeholder values
+3. **Rotate API keys** — Regularly update keys in production
+4. **Use strong secrets** — For `NEXTAUTH_SECRET`, generate: `openssl rand -base64 32`
+5. **Limit key permissions** — Each API key should have minimal required scopes
+
+### Pre-Deployment Verification
+
+Before deploying to production:
+- [ ] All production environment variables are set
+- [ ] Database migrations are applied
+- [ ] API keys are restricted to appropriate domains
+- [ ] SSL/HTTPS is enabled
+- [ ] Security headers are configured
 
 ## 📝 Professional Notes
 
