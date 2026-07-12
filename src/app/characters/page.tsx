@@ -9,10 +9,9 @@ export default function CharactersPage() {
       title="Character Library"
       description="Browse and select from our collection of AI-powered characters."
     >
-      <SectionTitle
-        title="Available Characters"
-        subtitle="Each character brings unique expertise and perspectives"
-      />
+      <SectionTitle subtitle="Each character brings unique expertise and perspectives">
+        Available Characters
+      </SectionTitle>
       <div className="mt-8">
         <CharacterGrid characters={characters} />
       </div>

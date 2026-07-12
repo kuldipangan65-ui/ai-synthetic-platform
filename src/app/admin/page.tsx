@@ -39,7 +39,12 @@ export default function AdminPage() {
       <div className="space-y-8">
         <div>
           <h2 className="text-2xl font-bold text-gray-900 mb-6">Platform Statistics</h2>
-          <StatGrid />
+          <StatGrid stats={[
+            { label: 'Total Users', value: '1,234' },
+            { label: 'Active Sessions', value: '89' },
+            { label: 'Total Conversations', value: '5,678' },
+            { label: 'Premium Users', value: '234' },
+          ]} />
         </div>
 
         <div>
