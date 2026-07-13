@@ -1,0 +1,124 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                    String                @id @default(cuid())
+  email                 String                @unique
+  name                  String
+  passwordHash          String
+  subscriptionTier      String                @default("free") // free, premium, enterprise
+  emailVerified         Boolean               @default(false)
+  emailVerifiedAt       DateTime?
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+  deletedAt             DateTime?
+
+  profile               UserProfile?
+  authSessions          AuthSession[]
+  conversationSessions  ConversationSession[]
+  subscription          Subscription?
+  usageTracking         UsageTracking[]
+
+  @@index([email])
+  @@index([createdAt])
+}
+
+model UserProfile {
+  id          String    @id @default(cuid())
+  userId      String    @unique
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  avatarUrl   String?
+  bio         String?
+  preferences String    @default("{}")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model ConversationSession {
+  id                    String                      @id @default(cuid())
+  userId                String
+  user                  User                        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  characterId           String
+  characterName         String
+  conversationContext   String?
+  durationSeconds       Int?
+  summary               String?
+  startedAt             DateTime                    @default(now())
+  endedAt               DateTime?
+  createdAt             DateTime                    @default(now())
+  updatedAt             DateTime                    @updatedAt
+
+  messages              ConversationMessage[]
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model ConversationMessage {
+  id        String    @id @default(cuid())
+  sessionId String
+  session   ConversationSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  role      String    // "user" | "assistant" | "system"
+  content   String
+  tokensUsed Int?
+  createdAt DateTime  @default(now())
+
+  @@index([sessionId])
+  @@index([createdAt])
+}
+
+model AuthSession {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String    @unique
+  expiresAt DateTime
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@index([token])
+}
+
+model Subscription {
+  id                  String    @id @default(cuid())
+  userId              String    @unique
+  user                User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stripeCustomerId    String?
+  stripeSubscriptionId String?
+  plan                String    @default("free")
+  status              String    @default("active")
+  currentPeriodStart  DateTime?
+  currentPeriodEnd    DateTime?
+  cancelAtPeriodEnd   Boolean   @default(false)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  @@index([userId])
+}
+
+model UsageTracking {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date            DateTime
+  conversationsCount Int   @default(0)
+  messagesCount   Int      @default(0)
+  tokensUsed      Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([userId, date])
+  @@index([userId])
+}
